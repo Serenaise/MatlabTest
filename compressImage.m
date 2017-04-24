@@ -6,8 +6,8 @@ h=makeHaar2(m); % h is an orthoogonal haar matrix of size mxm
 B=transpose(h)*A*h; %image matrix in haar coordinates
 C=B;
 % e will be the desired error
-%MiN=min(abs(B(:)));
-%mAx=max(abs(B(:)));
+% elementsB is a column vector containing all the unique nonero elements of
+% B
 elementsB=reshape(B,[m^2,1]);
 elementsB=elementsB(elementsB~=0);
 elementsB=abs(elementsB);
