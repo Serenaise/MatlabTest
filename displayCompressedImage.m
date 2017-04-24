@@ -1,5 +1,5 @@
 function displayCompressedImage(B_nonzero_vals, B_pos_vals, m)
-h=makeHaar2(m);
+h=makeHaar(m);
 BB=zeros([m^2,1]); %initializing BB to a col vector of zeros
 l=1;%nonzero val index
 g=B_nonzero_vals(l); %each nonzero val

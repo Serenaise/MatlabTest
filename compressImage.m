@@ -1,66 +1,34 @@
-%yal''s is sum bitchez
-function [B_nonzero_vals, B_pos_vals]=compressImage(A,m,e)
-%input: image matrix and size
-%output: array of nonzero values and position array
-h=makeHaar2(m); % h is an orthoogonal haar matrix of size mxm
-B=transpose(h)*A*h; %image matrix in haar coordinates
-C=B;
-% e will be the desired error
-% elementsB is a column vector containing all the unique nonero elements of
-% B
-elementsB=reshape(B,[m^2,1]);
-elementsB=elementsB(elementsB~=0);
-elementsB=abs(elementsB);
-elementsB=unique(elementsB);
-[sizeB,~]=size(elementsB);
-indexB=1;
-error=0;
-fff=elementsB(indexB);
-%while(error<e && indexB<=m^2)
-for indx=1:100
-
-            for i=1:m
-               for j=1:m
-                    if abs(C(i,j))<=fff
-                        C(i,j)=0;
-                        indexB = indexB + 1;
-                        if indx<=sizeB
-                            fff=elementsB(indx);
-                        end
-                    end
-               end
-            end
-            error=calcError(A,C,h);
-            %if err2<e
-                %error=err2;
-                %B=C;
-            %end
-end
-disp('error')
-disp(error)
-%Here we want to do error stuff.
-
-
-% compressing the image to send it:
-% we are compressing matrix B into two arrays
-% we are sending the two arrays and the value of m
-B_nonzero_vals=[]; %values of non zero numbers in B
-B_pos_vals=[]; %the position of the nonzero values (reading by the columns)
-% note: position 1=(1,1). position m=(m,1). position 2m+1=(1,3)
-B_vec=B(:);
-for j=1:m^2 %j represents columns
-        if B_vec(j) ~= 0
-            B_nonzero_vals=[B_nonzero_vals, B_vec(j)];
-            B_pos_vals = [B_pos_vals, j]; 
-        end
-end
-disp('size of info being sent: ')
-xx=size(B_pos_vals);
-2*xx(2)+1
-disp('size of image matrix ')
-m^2
-
-% Now we will send the person recieving the image B_nonzero_vals,
-% B_pos_vals, and m
+function [BTwid]=compressImage(A,sz,percent,Haar)
+    %input: image matrix A, size m, percent of elements to zero 
+    %output: array of nonzero values and position array
+    if (percent > 100 || percent < 0)
+        BTwid = A;
+        disp('ERROR: percent argument must be between 0 and 100');
+        return;
+    end 
+    B=transpose(Haar)*A*Haar; %image matrix in haar coordinates
+    if ( percent == 0 )
+       BTwid = B;
+       return;
+    end
+    % elementsB is a column vector containing all the unique nonero elements of
+    % B
+    elementsB=reshape(B,[sz^2,1]);
+    elementsB=elementsB(elementsB~=0);
+    elementsB=abs(elementsB);
+    elementsB=unique(elementsB);
+    [sizeOfB,~]=size(elementsB);
+    
+    percent = percent / 100;
+    cutOff = floor(percent*sizeOfB);
+    cutOff = elementsB(cutOff);
+    disp(cutOff)
+    
+    for i = 1:sz^2
+       if ( B(i) <= cutOff )
+          B(i) = 0; 
+       end
+    end
+    BTwid=B;
 
 end
