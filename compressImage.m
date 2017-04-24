@@ -1,3 +1,4 @@
+%yal''s is sum bitchez
 function [B_nonzero_vals, B_pos_vals]=compressImage(A,m,e)
 %input: image matrix and size
 %output: array of nonzero values and position array
